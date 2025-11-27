@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -41,6 +41,23 @@ async function run() {
     app.get("/products", async (req, res) => {
       let cursor = ProductCollection.find();
       const result = await cursor.toArray();
+      res.send(result);
+    });
+
+    // get single data
+    app.get("/products/:id", async (req, res) => {
+      const id = req.params.id;
+      const email = req.query.email;
+
+      const query = { _id: new ObjectId(id) };
+      const result = await ProductCollection.findOne(query);
+
+      if (!result) {
+        return res
+          .status(404)
+          .send({ message: "Transaction not found or unauthorized" });
+      }
+
       res.send(result);
     });
 
