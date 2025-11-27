@@ -9,7 +9,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.send("Server is Running");
 });
 
 const uri = process.env.URI
@@ -39,7 +39,13 @@ async function run() {
 
     // get all data
     app.get("/products", async (req, res) => {
-      let cursor = ProductCollection.find();
+      const expectedFields = {
+        imageUrl: 1,
+        title: 1,
+        shortDesc: 1,
+        price: 1,
+      };
+      let cursor = ProductCollection.find().project(expectedFields);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -47,8 +53,6 @@ async function run() {
     // get single data
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
-      const email = req.query.email;
-
       const query = { _id: new ObjectId(id) };
       const result = await ProductCollection.findOne(query);
 
