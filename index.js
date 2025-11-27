@@ -65,6 +65,27 @@ async function run() {
       res.send(result);
     });
 
+    //latest products
+    app.get("/latest-products", async (req, res) => {
+      try {
+        const expectedFields = {
+          imageUrl: 1,
+          title: 1,
+          shortDesc: 1,
+          price: 1,
+        };
+        const products = await ProductCollection.find({})
+          .project(expectedFields)
+          .sort({ date: -1 }) 
+          .limit(8)
+          .toArray();
+        res.json(products);
+      } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    });
+
     // delete a data
     app.delete("/products/:id", async (req, res) => {
       const id = req.params.id;
