@@ -25,7 +25,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+    // await client.connect();
 
     const database = client.db("FirstNextJS_DB");
     const ProductCollection = database.collection("Products");
@@ -58,7 +58,9 @@ async function run() {
         priority: 1,
         price: 1,
       };
-      let cursor = ProductCollection.find().project(expectedFields);
+      let cursor = ProductCollection.find()
+        .sort({ date: -1 })
+        .project(expectedFields);
       const result = await cursor.toArray();
       res.send(result);
     });
@@ -108,7 +110,7 @@ async function run() {
     });
 
     // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
+    // await client.db("admin").command({ ping: 1 });
     console.log(
       "Pinged your deployment. You successfully connected to MongoDB!"
     );
