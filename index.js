@@ -50,6 +50,19 @@ async function run() {
       res.send(result);
     });
 
+    //manage all data
+    app.get("/manage-products", async (req, res) => {
+      const expectedFields = {
+        date: 1,
+        title: 1,
+        priority: 1,
+        price: 1,
+      };
+      let cursor = ProductCollection.find().project(expectedFields);
+      const result = await cursor.toArray();
+      res.send(result);
+    });
+
     // get single data
     app.get("/products/:id", async (req, res) => {
       const id = req.params.id;
