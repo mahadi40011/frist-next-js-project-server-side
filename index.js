@@ -27,6 +27,16 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
 
+    const database = client.db("FirstNextJS_DB");
+    const ProductCollection = database.collection("Products");
+
+    // post a data
+    app.post("/add-product", async (req, res) => {
+      const newTransaction = req.body;
+      const result = await ProductCollection.insertOne(newTransaction);
+      res.send(result);
+    });
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log(
